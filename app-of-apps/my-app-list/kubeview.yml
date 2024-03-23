@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kubeview
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/codefresh-contrib/gitops-cert-level-2-examples.git
+    targetRevision: HEAD
+    path: ./app-of-apps/manifests
+   
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kubeview
+
+  # Sync policy
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true  
+    automated: 
+      prune: true 
+      selfHeal: true 
